@@ -1,0 +1,71 @@
+.OP_Movie {
+    position: relative;
+}
+
+.quest_start img {
+    position: absolute;
+    color: rgb(0, 0, 0);
+    width: 25%;
+    height: 10%;
+    bottom: 10%;
+    left: 10%;
+}
+.start_text p {
+    position: absolute;
+    color: black;
+    font-size: 200%;
+    bottom: 7%;
+    left: 18%;
+}
+.How_to_Play img{
+    position: absolute;
+    color: rgb(0, 0, 0);
+    width: 25%;
+    height: 10%;
+    bottom: 10%;
+    right: 10%;
+}
+.HtP_text p{
+    position: absolute;
+    color: black;
+    font-size: 200%;
+    bottom: 7%;
+    right: 20%;
+}
+.OP_Movie video {
+    width: 100%;
+}
+
+.Stage_BG {
+    position: relative;
+}
+.Player{
+    position: absolute;
+    left: 30px;
+    bottom: 120px;
+}
+.heart1{
+    position: absolute;
+    left: 20px;
+    top: 20px;
+}
+.heart2{
+    position: absolute;
+    left: 90px;
+    top: 20px;
+}
+.heart3{
+    position: absolute;
+    left: 160px;
+    top: 20px;
+}
+.text{
+    position: absolute;
+    left: 100px;
+    top: 30px;
+}
+.change_txt{
+    position: absolute;
+    left: 250px;
+    top: 30px;
+}

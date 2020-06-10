@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ja" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title>MonsterBuster(モンバス)</title>
+        <link rel="stylesheet" type="text/css" href="report06.css">
+        <style>
+            #s_normal{
+                position: absolute;
+                left: 1100;
+                bottom: 120px;
+            }
+            #s_die{
+                position: absolute;
+                left: 700px;
+                bottom: 120px;
+            }
+        </style>
+    </head>
+    <body>
+        <audio src="Sound/BGM/Stage01.mp3" loop autoplay></audio>
+        <audio id="se1" src="Sound/SE/kick.mp3"></audio>
+        <audio id="se2" src="Sound/SE/damage.mp3"></audio>
+        <div class="Stage_BG">
+            <img src="BackGround/back.png" width="1280" height="720">
+            <img id="player_place" src="Chara/player1.png" class="Player">
+            <img id="s_normal" src="Enemys/skeleton/s_normal/s0.png" class="s_normal">
+            <img id="s_die" src="Enemys/c_debris.png" class="s_die">
+            <img id="heart1" src="heart.png"class="heart1">
+            <img id="heart2" src="heart.png"class="heart2">
+            <img id="heart3" src="heart.png"class="heart3">
+            <div id="text">ゲームクリアまでのスケルトンの残り数</div>
+            <div id="change_txt"></div>
+        </div>
+    </body>
+    <script language="JavaScript">
+        //img要素を取得する
+        var img = document.getElementById("player_place");
+        var img2 = document.getElementById("s_normal");
+        var img3 = document.getElementById("s_die");
+        var img4 = document.getElementById("heart1");
+        var img5 = document.getElementById("heart2");
+        var img6 = document.getElementById("heart3");
+        var se1 = document.getElementById("se1");
+        var se2 = document.getElementById("se2");
+        //表示する画像番号
+        var idx = 1;    //player
+        var s_normal_idx = 0;   //ノーマルのスケルトン
+        var idx_time = 0;
+        var idx_f = false;
+        var skeleton_x = 1500;
+        var key_check = false;
+        var skeleton_back = false;
+        var skeleton_hit_cnt = 0;
+        var die_time = 0;
+        var player_life = 3;
+        var skeleton_nokori = 10;
+        addEventListener("keydown",keydownfunc,false);
+        addEventListener("keyup",keyupfunc,false);
+        if(img2 && img2.style){
+            img2.style.height = '250px';
+            img2.style.width = '200px';
+        }
+        if(img3 && img3.style){
+            img3.style.height = '250px';
+            img3.style.width = '200px';
+        }
+        function keydownfunc( event ){
+            var key_code = event.keyCode;
+            if (key_code === 32){
+                idx++;
+                key_check = true;
+                idx_time = 0;
+                if (idx > 3){
+                    idx = 2;
+                }
+            }
+        }
+        function keyupfunc(event){
+            key_check = false;
+        }
+        var update = function (){
+            idx_time ++;
+            
+            setTimeout(update, 100);
+            if(idx_time >= 10){ //プレイヤーの表示を初期化
+                idx = 1;
+                idx_time = 0;
+            }
+            //img要素のsrcに画像ファイル名を設定する
+            img.src = "Chara/player" + idx + ".png";
+        }
+        var skeleton_update = function(){
+            s_normal_idx ++;
+            document.getElementById("change_txt").innerHTML = skeleton_nokori;
+            if (skeleton_back == false){
+                skeleton_x -= 10;
+            }
+            if(skeleton_x >= 1100 || skeleton_x <= 0){
+                document.getElementById("s_normal").style.visibility = "hidden";
+            }
+            if (skeleton_x <= 0 && key_check == false){   //ダメージを食らう
+                skeleton_hit_cnt = 0;
+                player_life --;
+                skeleton_x = 1500;
+                se2.play();
+            }
+            if (skeleton_hit_cnt == 3){ //スケルトンを倒した
+                document.getElementById("s_normal").style.visibility = "hidden";
+                document.getElementById("s_die").style.visibility = "visible";
+                
+                
+                die_time ++;
+                if(die_time >= 50){
+                    document.getElementById("s_die").style.visibility = "hidden";
+                    skeleton_hit_cnt = 0;
+                    skeleton_nokori --;
+                    die_time = 0;
+                    skeleton_x = 1500;
+                }
+                
+            }else{
+                document.getElementById("s_normal").style.visibility = "visible";
+                document.getElementById("s_die").style.visibility = "hidden";
+            }
+            document.getElementById("s_normal").style.left = skeleton_x + "px";
+            setTimeout(skeleton_update, 10);
+            if(s_normal_idx == 40){
+                s_normal_idx = 0;
+            }
+            if (key_check == true && skeleton_x < 300 && skeleton_x >= 0){
+                skeleton_back = true;
+                se1.play();
+            }
+            if (skeleton_back == true){
+                skeleton_x += 20;
+            }
+            if (skeleton_x >= 700 && skeleton_back == true){
+                skeleton_back = false;
+                skeleton_hit_cnt ++;
+            }
+            if (player_life == 2){
+                document.getElementById("heart3").style.visibility = "hidden";
+            }
+            if (player_life == 1){
+                document.getElementById("heart2").style.visibility = "hidden";
+                document.getElementById("heart3").style.visibility = "hidden";
+            }
+            if (player_life == 0){
+                document.getElementById("heart1").style.visibility = "hidden";
+                document.getElementById("heart2").style.visibility = "hidden";
+                document.getElementById("heart3").style.visibility = "hidden";
+                alert("ゲームオーバー...");
+                location.href = 'Title.html';
+                player_life = -1;
+            }
+            if (skeleton_nokori == 0){
+                alert("ゲームクリア！！");
+                location.href = 'Title.html';
+                skeleton_nokori = -1;
+            }
+            console.log("skeleton_hit_cnt = " + skeleton_hit_cnt);
+            img2.src = "Enemys/skeleton/s_normal/s" + s_normal_idx + ".png";
+            img3.src = "Enemys/c_debris.png";
+            img4.src = "heart.png";
+            img5.src = "heart.png";
+            img6.src = "heart.png";
+        }
+        update();
+        skeleton_update();
+    </script>
+</html>
